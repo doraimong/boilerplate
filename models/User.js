@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 const saltRounds=10
-
+const jwt = require('jsonwebtoken');
 
 const userSchema=mongoose.Schema({
     name: {
@@ -44,8 +44,33 @@ userSchema.pre('save', function(next){      //저장전 전처리하고 next함�
                 next()
             })
         })
+    }else{      //다른 요소를 바꿀땐 그냥 둔다.
+        next()
     }
 })
+
+
+userSchema.methods.comparePassword = function(plainPassword, cb){   //cb 콜백함수[홈페이지에 찾아보니까 형식이 그냥 .method.comparePassword 로 메소드를 추가하는 거다.(https://mongoosejs.com/docs/api/schema.html#schema_Schema-method)]
+
+    // plainPassword가 입력된 비번, this.password가 암호화된 비번 => plainPassword를 암호화해서 비교를 해야한다.
+    bcrypt.compare(plainPassword, this.password, function(err, isMatch){
+        console.log(isMatch);
+        if(err)return cb(err) //다를때
+            cb(null, isMatch)//같을때, isMatch는 true의 의미 그리고 index의 comparePassword 함수로 돌아간다. 
+    })
+}
+
+userSchema.methods.generateToken = function(cb){
+    var user = this;
+
+    var token = jwt.sign(user._id.toHexString(), 'secretToken')                   //!!!!!!!!!!!id로 토큰을 만든다-> 이메일 관리시 수정필요 
+
+    user.token = token  //스키마의 토큰에 넣고
+    user.save(function(err,user){   //저장 
+        if(err) return cb(err)
+        cb(null, user)
+    })
+}
 
 //스키마를 모델로 감싼다.
 const User = mongoose.model('User',userSchema);
