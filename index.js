@@ -21,6 +21,10 @@ app.get('/', (req, res) => {
   res.send('Hello World!')
 })
 
+app.get('/api/hello', (req, res)=>{
+  res.send("안녕하세요 ~ ")
+})
+
 app.post('/register',(req, res)=>{
   //회원 가입 할때 필요한 정보들을 클라이언트에서 가져오면 그것들을 데이터 베이스에 넣어준다.
   //body-parser를 이용해서 정리된 정보를 받는다.
