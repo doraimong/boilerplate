@@ -4,7 +4,7 @@ const port = 5000
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const config = require('./config/key');
-
+const {auth} = require('./middleware/auth');
 const {User} = require("./models/User");
 //application/x-www-form-urlencoded 데이터를 분석해서 가져오게 함
 app.use(bodyParser.urlencoded({extended: true}));
@@ -12,7 +12,8 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(cookieParser());
 
-const mongoose=require('mongoose')
+const mongoose=require('mongoose');
+const { request } = require('express');
 mongoose.connect(config.mongoURI)  //대체 : "mongodb://localhost:27017/"
 .then(()=>console.log('MongoDB Connected.............'))    //몽고 디비가 꺼져있을때 cmd에 mongod를 치면 서버 켜진다.
     .catch(err=>console.log(err))
@@ -25,7 +26,7 @@ app.get('/api/hello', (req, res)=>{
   res.send("안녕하세요 ~ ")
 })
 
-app.post('/register',(req, res)=>{
+app.post('/api/users/register',(req, res)=>{
   //회원 가입 할때 필요한 정보들을 클라이언트에서 가져오면 그것들을 데이터 베이스에 넣어준다.
   //body-parser를 이용해서 정리된 정보를 받는다.
   const user = new User(req.body)
@@ -37,7 +38,7 @@ app.post('/register',(req, res)=>{
   })
 })
 
-app.post('/login',(req, res)=>{
+app.post('/api/users/login',(req, res)=>{
   //요청된 이메일을 데이터베이스에서 있는지 검색.
   User.findOne({email: req.body.email}, (err, user)=>{  //User 모델을(유저 스키마 정보존재) 이용 -> 검색해서 없다면 user 없을 것이다.
     if(!user){
@@ -60,10 +61,12 @@ app.post('/login',(req, res)=>{
           .status(200)
           .json({loginSuccess: true, userId:user._id})
       })
-
-      
     })
   })
+})
+
+app.get('/api/users/auth', auth,(req, res)=> {//auth는 미들웨어, 콜백 함수전 해주는거 
+
 })
 
 app.listen(port, () => {
