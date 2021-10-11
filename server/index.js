@@ -67,7 +67,7 @@ app.post('/api/users/login',(req, res)=>{
 })
 
 app.get('/api/users/auth', auth, (req, res)=> {//auth는 미들웨어, 콜백 함수전 해주는거 
-  //여기까지 미들웨어를 통과했다는 의미는 Authentication이 True라는 말
+  //여기까지 미들웨어를 통과했다는 의미는 Authentication이 True 라는 말
   //true라는 것을 클라이언트에 전달
   res.status(200).json({
     _id:req.user._id,

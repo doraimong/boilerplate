@@ -2,6 +2,7 @@ import React,{useState} from 'react'
 import Axios from 'axios'   //axios는 안쓰는데 그 이유로 redux로 request를 보내기 때문 
 import {useDispatch} from 'react-redux';
 import {registerUser} from '../../../_actions/user_action';
+import {withRouter} from 'react-router-dom';
 
 function RegisterPage(props){
     const dispatch = useDispatch();
@@ -85,4 +86,4 @@ function RegisterPage(props){
     )
 }
 
-export default RegisterPage
+export default withRouter(RegisterPage)
