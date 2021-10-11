@@ -6,6 +6,7 @@ const cookieParser = require('cookie-parser');
 const config = require('./config/key');
 const {auth} = require('./middleware/auth');
 const {User} = require("./models/User");
+
 //application/x-www-form-urlencoded 데이터를 분석해서 가져오게 함
 app.use(bodyParser.urlencoded({extended: true}));
 //application/ json 타입으로 된 것을 분석 가져오기
@@ -78,7 +79,18 @@ app.get('/api/users/auth', auth, (req, res)=> {//auth는 미들웨어, 콜백 �
     role: req.user.role,
     image: req.user.image //어떤페이지에서든 유저정보 사용가능
   })
+})
 
+app.get('/api/users/logout', auth, (req,res)=>{
+
+  User.findOneAndUpdate({ _id: req.user._id},//auth 미들웨어에서 찾아서 가져온거 : _id: req.user._id
+    { token: ""},   //토큰 삭제
+    (err,user)=> {
+      if(err) return res.json({success: false, err});
+      return res.status(200).send({
+        success:true
+      })
+    })
 })
 
 app.listen(port, () => {

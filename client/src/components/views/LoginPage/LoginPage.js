@@ -1,9 +1,10 @@
 import React,{useState} from 'react'
 import Axios from 'axios'
 import {useDispatch} from 'react-redux';
-import {loginUser} from '../../../_actions/user_action'
+import {loginUser} from '../../../_actions/user_action';
+import { withRouter } from 'react-router-dom';
 
-function LoginPage(){
+function LoginPage(props){
     const dispatch = useDispatch();
 
     const [Email, setEmail] = useState("")
@@ -26,6 +27,13 @@ function LoginPage(){
         }
 
         dispatch(loginUser(body))  //dispatch로 redux사용을 위한 action을 취한다.
+            .then(response => {
+                if(response.payload.loginSuccess){
+                    props.history.push('/') //리액트에서 페이지 이동시키는 방법 
+                }else {
+                    alert('Error')
+                }
+            }) 
 
         /*Axios.post('/login', body)    이거를 action 폴더 user_action으로 옮김
         .then(response=>{

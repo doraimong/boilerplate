@@ -83,13 +83,8 @@ userSchema.statics.findByToken = function(token, cb) {
         user.findOne({"_id": decoded, "token":token}, function(err, user){  
             if(err) return cb(err); // 문제있으면 콜백으로 에러 전달, 없다면 유저정보 전달
             cb(null, user)
-
         })
-
     })
-
-    jwt.
-
 }
 
 //스키마를 모델로 감싼다.
