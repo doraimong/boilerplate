@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 const mongoose=require('mongoose');
 const { request } = require('express');
-mongoose.connect(config.mongoURI)  //대체 : "mongodb://localhost:27017/"
+mongoose.connect(config.mongoURI, {dbName:"Donga_project"})  //대체 : "mongodb://localhost:27017/"
 .then(()=>console.log('MongoDB Connected.............'))    //몽고 디비가 꺼져있을때 cmd에 mongod를 치면 서버 켜진다.
     .catch(err=>console.log(err))
 
